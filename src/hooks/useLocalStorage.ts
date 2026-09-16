@@ -17,7 +17,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
         localStorage.setItem(key, JSON.stringify(data))
     }, [data, key])
 
-    return [data, setData];
+    return [data, setData] as const;
 
 }
 
