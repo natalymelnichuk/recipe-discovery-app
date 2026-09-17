@@ -13,7 +13,7 @@ function App() {
   
   return (
     <FavoritesProvider>
-      <BrowserRouter basename="/recipe-discovery-app">
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <div className="min-h-screen bg-[#FDFBF7] text-slate-800">
           
           <Navbar />
