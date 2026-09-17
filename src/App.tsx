@@ -6,7 +6,7 @@ import { FavoritesProvider } from './context/FavoritesContext';
 
 import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
-// import SearchDetail from "./pages/SearchDetail";
+import SearchDetail from "./pages/SearchDetail";
 import RecipeDetailPage from "./pages/RecipeDetailPage";
 import FavoritesPage from "./pages/FavoritesPage";
 
@@ -22,7 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/category/:name" element={<CategoryPage />} />
-              {/* <Route path="/search" element={<SearchDetail />} /> */}
+              <Route path="/search" element={<SearchDetail />} />
               <Route path="/recipe/:idSlug" element={<RecipeDetailPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
             </Routes>
