@@ -28,6 +28,19 @@ export default function Navbar() {
                         Home
                     </NavLink>
                     <NavLink
+                        to="/search"
+                        className={({ isActive }) =>
+                            `px-4 py-2 rounded-2xl text-sm font-medium transition-all flex items-center gap-1.5 ${
+                                isActive
+                                    ? "bg-amber-100/80 text-amber-900 shadow-sm"
+                                    : "text-slate-600 hover:text-slate-900 hover:bg-amber-50/50"
+                            }`
+                        }
+                    >
+                        <span>Search</span>
+                    </NavLink>
+                    
+                    <NavLink
                         to="/favorites"
                         className={({ isActive }) =>
                             `px-4 py-2 rounded-2xl text-sm font-medium transition-all flex items-center gap-1.5 ${

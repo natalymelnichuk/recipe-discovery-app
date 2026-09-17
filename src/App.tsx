@@ -1,9 +1,7 @@
 
-import './App.css'
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FavoritesProvider } from './context/FavoritesContext';
-
+import Navbar from './components/Navbar';
 import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
 import SearchDetail from "./pages/SearchDetail";
@@ -18,6 +16,8 @@ function App() {
       <BrowserRouter>
         <div className="min-h-screen bg-[#FDFBF7] text-slate-800">
           
+          <Navbar />
+
           <main className="container mx-auto px-4 py-6">
             <Routes>
               <Route path="/" element={<HomePage />} />
