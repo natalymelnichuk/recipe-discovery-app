@@ -1,10 +1,10 @@
 
 import { useParams, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
-import { createSlug } from "../utils/slugify";
 import type { MealsResponse } from "../types/meal";
 import Spinner from "../components/Spinner";
 import ErrorMessage from "../components/ErrorMessage";
+import RecipeCard from "../components/RecipeCard";
 
 
 
@@ -15,7 +15,7 @@ export default function CategoryPage() {
         `https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`
     );
 
-    if (loading) return <Spinner />;
+    if (loading || !data) return <Spinner />;
     if (error) return <ErrorMessage message={error instanceof Error ? error.message : "Failed to load categories"} />;
     
 
@@ -43,27 +43,7 @@ export default function CategoryPage() {
             {data?.meals && data.meals.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {data.meals.map((meal) => (
-                        <Link
-                            to={`/recipe/${meal.idMeal}-${createSlug(meal.strMeal)}`}
-                            key={meal.idMeal}
-                            className="bg-white/90 backdrop-blur-md rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-amber-100/60 flex flex-col group"
-                        >
-                            <div className="w-full h-48 bg-gradient-to-br from-amber-100/40 to-orange-50/30 overflow-hidden relative">
-                                <img
-                                    src={meal.strMealThumb}
-                                    alt={meal.strMeal}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
-                            </div>
-                            <div className="p-5 flex flex-col flex-grow justify-between">
-                                <h2 className="text-lg font-bold text-slate-800 group-hover:text-amber-700 transition-colors line-clamp-2">
-                                    {meal.strMeal}
-                                </h2>
-                                <span className="text-xs font-medium text-amber-700 mt-4 inline-flex items-center gap-1">
-                                    View Recipe
-                                </span>
-                            </div>
-                        </Link>
+                        <RecipeCard key={meal.idMeal} meal={meal} />
                     ))}
                 </div>
             ) : (
@@ -71,6 +51,7 @@ export default function CategoryPage() {
                     <p className="font-medium">No recipes found in this category.</p>
                 </div>
             )}
+            
         </div>
     );
 }

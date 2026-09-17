@@ -1,27 +1,16 @@
 
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import { useFavs } from "../hooks/useFavs";
+import type { MealDetail ,MealDetailResponse } from "../types/meal";
+import Spinner from "../components/Spinner";
+import ErrorMessage from "../components/ErrorMessage";
 
-interface MealDetail {
-    idMeal: string;
-    strMeal: string;
-    strCategory: string;
-    strArea: string;
-    strInstructions: string;
-    strMealThumb: string;
-    strYoutube?: string;
-    [key: `strIngredient${number}`]: string | null | undefined;
-    [key: `strMeasure${number}`]: string | null | undefined;
-}
-
-interface MealDetailResponse {
-    meals: MealDetail[] | null;
-}
 
 export default function RecipeDetailPage() {
     const { idSlug } = useParams<{ idSlug: string }>();
     const id = idSlug ? idSlug.split('-')[0] : '';
+
     const navigate = useNavigate();
     const { favorites, addFavorite, removeFavorite } = useFavs();
 
@@ -29,35 +18,18 @@ export default function RecipeDetailPage() {
         `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
     );
 
-    const meal = data?.meals ? data.meals[0] : null;
+    if (!id) return <Spinner />
+
+    if (loading || !data) return <Spinner />;
+    if (error) return <ErrorMessage message={error instanceof Error ? error.message : "Could not load this recipe."} />;
+    
+    
+    if (!data || !data.meals || data.meals.length === 0) {
+        return <ErrorMessage message="Recipe not found." />;
+    }
+
+    const meal = data.meals[0];
     const isFavorite = meal ? favorites.includes(meal.idMeal) : false;
-
-    if (loading || !data) {
-        return (
-            <div className="flex justify-center items-center min-h-[50vh]">
-                <div className="text-lg text-amber-600 font-medium animate-pulse">
-                    Loading recipe details...
-                </div>
-            </div>
-        );
-    }
-
-    if (error || !meal) {
-        return (
-            <div className="text-center py-10 text-rose-600 bg-rose-50/95 rounded-3xl p-6 max-w-md mx-auto border border-rose-100 shadow-sm">
-                <p className="font-semibold">Oops! Recipe not found:</p>
-                <p className="text-sm mt-1">
-                    {error instanceof Error ? error.message : "Could not load this recipe."}
-                </p>
-                <Link
-                    to="/"
-                    className="inline-block mt-4 px-4 py-2 bg-white rounded-xl text-slate-700 text-sm font-medium shadow-sm border border-rose-200"
-                >
-                    Back to Home
-                </Link>
-            </div>
-        );
-    }
 
     
     const ingredients: { ingredient: string; measure: string }[] = [];
