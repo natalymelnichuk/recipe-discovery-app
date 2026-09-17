@@ -2,16 +2,11 @@
 import { useParams, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import { createSlug } from "../utils/slugify";
+import type { MealsResponse } from "../types/meal";
+import Spinner from "../components/Spinner";
+import ErrorMessage from "../components/ErrorMessage";
 
-interface MealSummary {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-}
 
-interface MealsResponse {
-    meals: MealSummary[] | null;
-}
 
 export default function CategoryPage() {
     const { name } = useParams<{ name: string }>();
@@ -20,24 +15,9 @@ export default function CategoryPage() {
         `https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`
     );
 
-    if (loading || !data) {
-        return (
-            <div className="flex justify-center items-center min-h-[50vh]">
-                <div className="text-lg text-amber-600 font-medium animate-pulse">
-                    Loading recipes for {name}...
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="text-center py-10 text-rose-600 bg-rose-50/90 rounded-3xl p-6 max-w-md mx-auto border border-rose-100 shadow-sm">
-                <p className="font-semibold">Oops! Something went wrong:</p>
-                <p className="text-sm mt-1">{error instanceof Error ? error.message : String(error)}</p>
-            </div>
-        );
-    }
+    if (loading) return <Spinner />;
+    if (error) return <ErrorMessage message={error instanceof Error ? error.message : "Failed to load categories"} />;
+    
 
     return (
         <div className="space-y-10 pb-16">

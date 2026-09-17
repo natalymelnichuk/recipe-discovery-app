@@ -1,41 +1,17 @@
 
 import useFetch from "../hooks/useFetch";
 import { Link } from "react-router-dom";
-
-interface Category {
-    idCategory: string;
-    strCategory: string;
-    strCategoryThumb: string;
-    strCategoryDescription: string;
-}
-
-interface CategoriesResponse {
-    categories: Category[];
-}
+import Spinner from "../components/Spinner";
+import ErrorMessage from "../components/ErrorMessage";
+import type { CategoriesResponse } from "../types/category";
 
 export default function HomePage() {
     const { data, loading, error } = useFetch<CategoriesResponse>(
         "https://www.themealdb.com/api/json/v1/1/categories.php"
     );
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-[50vh]">
-                <div className="text-lg text-amber-600 font-medium animate-pulse">
-                    Loading delicious categories...
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="text-center py-10 text-rose-600 bg-rose-50/90 rounded-3xl p-6 max-w-md mx-auto border border-rose-100 shadow-sm">
-                <p className="font-semibold">Oops! Something went wrong:</p>
-                <p className="text-sm mt-1">{error instanceof Error ? error.message : String(error)}</p>
-            </div>
-        );
-    }
+    if (loading) return <Spinner />;
+    if (error) return <ErrorMessage message={error instanceof Error ? error.message : "Failed to load categories"} />;
 
     return (
         <div className="space-y-10 pb-16">
