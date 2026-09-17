@@ -8,7 +8,7 @@ import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
 // import SearchDetail from "./pages/SearchDetail";
 import RecipeDetailPage from "./pages/RecipeDetailPage";
-// import FavoritesPage from "./pages/FavoritesPage";
+import FavoritesPage from "./pages/FavoritesPage";
 
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
               <Route path="/category/:name" element={<CategoryPage />} />
               {/* <Route path="/search" element={<SearchDetail />} /> */}
               <Route path="/recipe/:idSlug" element={<RecipeDetailPage />} />
-              {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
+              <Route path="/favorites" element={<FavoritesPage />} />
             </Routes>
           </main>
         </div>

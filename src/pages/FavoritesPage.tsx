@@ -1,14 +1,12 @@
-
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import { useFavs } from "../hooks/useFavs";
-import { createSlug } from "../utils/slugify";
 import type { MealSummary } from "../types/meal";
-
-
+import Spinner from "../components/Spinner";
+import RecipeCard from "../components/RecipeCard";
 
 export default function FavoritesPage() {
-    const { favorites, removeFavorite } = useFavs();
+    const { favorites } = useFavs();
     const [meals, setMeals] = useState<MealSummary[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -22,7 +20,6 @@ export default function FavoritesPage() {
 
             setLoading(true);
             try {
-                // Запрашиваем каждый любимый рецепт по его ID паралелльно
                 const promises = favorites.map(async (id) => {
                     const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
                     const data = await res.json();
@@ -30,7 +27,6 @@ export default function FavoritesPage() {
                 });
 
                 const results = await Promise.all(promises);
-                // Фильтруем на случай, если какой-то рецепт не нашелся
                 setMeals(results.filter((meal): meal is MealSummary => meal !== null));
             } catch (err) {
                 console.error("Failed to fetch favorite recipes:", err);
@@ -42,15 +38,7 @@ export default function FavoritesPage() {
         fetchFavorites();
     }, [favorites]);
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-[50vh]">
-                <div className="text-lg text-amber-600 font-medium animate-pulse">
-                    Loading your favorite recipes...
-                </div>
-            </div>
-        );
-    }
+    if (loading || !data) return <Spinner />;
 
     return (
         <div className="space-y-10 pb-16">
@@ -68,51 +56,15 @@ export default function FavoritesPage() {
                     to="/"
                     className="px-5 py-2.5 rounded-2xl bg-white/80 hover:bg-white text-slate-700 font-medium text-sm shadow-sm border border-amber-100/60 transition-all duration-300 hover:shadow"
                 >
-                    ← Back to Categories
+                    Back to Categories
                 </Link>
             </div>
 
-            {/* Recipes Grid or Empty State */}
+            {/* Recipes Grid using RecipeCard or Empty State */}
             {meals.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {meals.map((meal) => (
-                        <div
-                            key={meal.idMeal}
-                            className="bg-white/95 backdrop-blur-md rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-amber-100/60 flex flex-col group relative"
-                        >
-                            {/* Кнопка быстрого удаления прямо с карточки */}
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    removeFavorite(meal.idMeal);
-                                }}
-                                title="Remove from favorites"
-                                className="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-full flex items-center justify-center shadow-sm border border-amber-100/60 transition-colors cursor-pointer"
-                            >
-                                ❤️
-                            </button>
-
-                            <Link
-                                to={`/recipe/${meal.idMeal}-${createSlug(meal.strMeal)}`}
-                                className="flex flex-col flex-grow"
-                            >
-                                <div className="w-full h-48 bg-gradient-to-br from-amber-100/40 to-orange-50/30 overflow-hidden relative">
-                                    <img
-                                        src={meal.strMealThumb}
-                                        alt={meal.strMeal}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                </div>
-                                <div className="p-5 flex flex-col flex-grow justify-between">
-                                    <h2 className="text-lg font-bold text-slate-800 group-hover:text-amber-700 transition-colors line-clamp-2">
-                                        {meal.strMeal}
-                                    </h2>
-                                    <span className="text-xs font-medium text-amber-700 mt-4 inline-flex items-center gap-1">
-                                        View Recipe →
-                                    </span>
-                                </div>
-                            </Link>
-                        </div>
+                        <RecipeCard key={meal.idMeal} meal={meal} />
                     ))}
                 </div>
             ) : (
