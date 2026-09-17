@@ -13,7 +13,7 @@ function App() {
   
   return (
     <FavoritesProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/recipe-discovery-app">
         <div className="min-h-screen bg-[#FDFBF7] text-slate-800">
           
           <Navbar />
