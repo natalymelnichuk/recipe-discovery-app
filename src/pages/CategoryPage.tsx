@@ -1,6 +1,7 @@
 
 import { useParams, Link } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
+import { createSlug } from "../utils/slugify";
 
 interface MealSummary {
     idMeal: string;
@@ -63,7 +64,7 @@ export default function CategoryPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {data.meals.map((meal) => (
                         <Link
-                            to={`/recipe/${meal.idMeal}`}
+                            to={`/recipe/${meal.idMeal}-${createSlug(meal.strMeal)}`}
                             key={meal.idMeal}
                             className="bg-white/90 backdrop-blur-md rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-amber-100/60 flex flex-col group"
                         >

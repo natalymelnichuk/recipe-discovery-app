@@ -23,7 +23,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/category/:name" element={<CategoryPage />} />
               {/* <Route path="/search" element={<SearchDetail />} /> */}
-              <Route path="/recipe/:id" element={<RecipeDetailPage />} />
+              <Route path="/recipe/:idSlug" element={<RecipeDetailPage />} />
               {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
             </Routes>
           </main>

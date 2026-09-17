@@ -20,7 +20,8 @@ interface MealDetailResponse {
 }
 
 export default function RecipeDetailPage() {
-    const { id } = useParams<{ id: string }>();
+    const { idSlug } = useParams<{ idSlug: string }>();
+    const id = idSlug ? idSlug.split('-')[0] : '';
     const navigate = useNavigate();
     const { favorites, addFavorite, removeFavorite } = useFavs();
 
