@@ -1,78 +1,53 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Recipe Discovery App
 
-Currently, two official plugins are available:
+A modern, responsive React single-page application built with TypeScript and Tailwind CSS that allows users to explore, search, and save their favorite recipes from around the world using the [TheMealDB API](https://www.themealdb.com/api.php).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Live Demo: [https://natalymelnichuk.github.io/recipe-discovery-app/]
 
-## React Compiler
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Features
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+- **Home Page**: Browse recipe categories fetched dynamically from the API with smooth category switching.
+- **Category & Detail Pages**: View recipes by category and inspect full ingredients, measurements, and cooking instructions for any dish.
+- **Global Search (`/search`)**: Search for recipes across the entire API database by keyword.
+- **Favorites Management (`/favorites`)**: Persist saved recipes across browser sessions using custom hooks and local storage, complete with a real-time local name filter.
+- **Responsive UI**: Clean, modern interface designed with Tailwind CSS, featuring custom loading spinners and robust error handling.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Challenges and Solutions
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* **Challenge:** Handling asynchronous data fetching, loading states, and potential errors when integrating external data from TheMealDB API into React components.
+* **Solution:** Implemented structured error handling and clean data-fetching patterns within custom hooks to ensure smooth user feedback during API requests.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* **Challenge:** Synchronizing user-saved favorite recipes globally across multiple independent components (such as cards, detail views, and search filters) without causing prop drilling.
+* **Solution:** Centralized state management using a dedicated **`FavoritesContext`** combined with a custom **`useLocalStorage`** hook to persist data across sessions.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* **Challenge:** Managing static asset paths and client-side routing differences between local development (`localhost`) and production subdirectory hosting on GitHub Pages.
+* **Solution:** Configured Vite's `base` property and utilized dynamic router `basename={import.meta.env.BASE_URL}` to ensure seamless navigation and asset loading.
 
-```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Key Architectural & Design Decisions
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* **Global Navbar Placement (`App.tsx`):** 
+  The navigation bar was placed directly at the top level inside `App.tsx` (above the router view) so that it remains persistently visible across all pages without needing to be repeatedly imported inside individual layout views.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* **Reusable Component Architecture:** 
+  UI elements like recipe cards, and search inputs were built as modular components. By accepting dynamic props (such as data objects, click handlers, and styling variants), these components are easily reused across the Home, Category, Details, and Favorites pages.
 
-```
+* **Strict TypeScript Typing:** 
+  Dedicated types and interfaces were created in separate files to define API responses, recipe structures, and component props. This approach ensures robust type safety, improves autocomplete in the IDE, and prevents runtime errors.
+
+* **Custom Hooks & Their Purpose:** 
+  Custom hooks were structured to isolate specific logic—such as handling local storage persistence, managing search parameters, or abstracting API fetching processes. This separates business logic cleanly from UI presentation components, making the codebase much easier to maintain and test.
+
+
+## Getting Started Locally
+
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing.
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/natalymelnichuk/recipe-discovery-app.git](https://github.com/natalymelnichuk/recipe-discovery-app.git)
